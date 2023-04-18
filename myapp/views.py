@@ -3,15 +3,15 @@ from django.http import HttpResponse
 
 
 def main(request):
-    return HttpResponse("It's your blog page!")
+    return render(request, 'base.html')
 
 
 def registration(request):
-    return HttpResponse("It's registration page")
+    return render(request, 'navigations/registration.html')
 
 
 def login(request):
-    return HttpResponse("Login page")
+    return render(request, 'navigations/login.html')
 
 
 def logout(request):
@@ -30,14 +30,14 @@ def watch_blog(request, slug=None):
     data = {
         'text': slug
     }
-    return HttpResponse("You can see the blog here")
+    return render(request, 'watch_blog.html')
 
 def comment(request, slug=None):
     return HttpResponse("Comment")
 
 
 def create(request):
-    return HttpResponse("Create your post here")
+    return render(request, 'create_blog.html')
 
 
 def publication_update(request, slug=None):
