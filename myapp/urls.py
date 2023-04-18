@@ -1,5 +1,5 @@
 from django.urls import path, include
-from myapp.views import main, discription, watch_blog, comment, create, publication_update, publication_delete, \
+from myapp.views import main, description, watch_blog, comment, create, publication_update, publication_delete, \
     profile, registration, login, logout, change_data
 
 
@@ -11,7 +11,7 @@ urlpatterns = [
     path('login/', login, name='login'),
     path('logout/', logout, name='logout'),
     path('blogs/', main, name='blogs'),
-    path('about/', discription, name='site_discription'),
+    path('about/', description, name='site_description'),
     path('<slug:slug>/', watch_blog, name='look_blog'),
     path('<slug:slug>/comment/', comment, name='comment'),
     path('blogs/create/', create, name='create'),

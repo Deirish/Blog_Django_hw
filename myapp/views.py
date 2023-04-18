@@ -22,8 +22,8 @@ def change_data(request):
     return HttpResponse("Change personal data")
 
 
-def discription(request):
-    return HttpResponse("It's discription!")
+def description(request):
+    return HttpResponse("It's description!")
 
 
 def watch_blog(request, slug=None):
