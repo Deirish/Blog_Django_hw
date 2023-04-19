@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}Login{% endblock %}
+<div class="header">
+    {% block header %}
+    <a href="{% url 'main' %}">Home </a>
+    <a href="{% url 'site_description' %}">About </a>
+    {% endblock %}
+</div>
 {% block content %}
     <div class="main_form">
     <h2>Login</h2>
