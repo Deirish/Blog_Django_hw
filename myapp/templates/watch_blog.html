@@ -9,6 +9,8 @@
 {% block content %}
     <div class="main_form">
     <h2>See Blog Details</h2>
+        <h1>{{post.topic}}</h1>
+            {{post.text}}
     <form action="" method="post">
         {% csrf_token %}
         {{ form.as_p }}

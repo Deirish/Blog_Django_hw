@@ -2,31 +2,28 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Post(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+class Topic(models.Model):
     title = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ['title']
+
+
+class Post(models.Model):
+    author = models.ManyToManyField(User)
+    topic = models.ManyToManyField(Topic)
     text = models.TextField()
     date_create = models.DateTimeField(auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        ordering = ['title']
-
     def __str__(self):
-        return self.title
-
-
-class Topic(models.Model):
-    author = models.ManyToManyField(User)
-    post = models.ManyToManyField(Post)
-    title = models.CharField(max_length=150)
-    description = models.TextField()
+        return self.text
 
     class Meta:
-        ordering = ['title']
-
-    def __str__(self):
-        return self.title
+        ordering = ['text']
 
 
 class Comment(models.Model):

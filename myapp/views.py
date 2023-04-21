@@ -1,9 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from myapp.models import Post
 
 
 def main(request):
-    return render(request, 'base.html')
+    context = {
+        'posts': Post.objects.all()
+    }
+    return render(request, 'base.html', context)
 
 
 def registration(request):
@@ -28,9 +32,9 @@ def description(request):
 
 def watch_blog(request, slug=None):
     data = {
-        'text': slug
+        'text': slug,
     }
-    return render(request, 'watch_blog.html')
+    return render(request, 'watch_blog.html', data)
 
 def comment(request, slug=None):
     return HttpResponse("Comment")

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}{{ post.topic }}{% endblock %}
+<div class="header">
+    {% block header %}
+    <a href="{% url 'main' %}">Home </a>
+    <a href="{% url 'site_description' %}">About </a>
+    {% endblock %}
+</div>
+{% block content %}
+<h1>{{post.topic}}</h1>
+{{post.text}}
+{% endblock %}
