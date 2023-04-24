@@ -13,8 +13,8 @@
   {% else %}
     {% for obj in posts %}
     <a href="{{ obj.get_absolute_url }}"><b>{{ obj.title }}</b></a>
-    <p>{{ obj.text|truncatechars:70 }}</p>
-    <span>{{ obj.date_create }}</span>
+    <p>{{ obj.text|truncatechars:100 }}</p>
+    <span>Author: {{ user }} {{ obj.date_create }}</span>
     <br><br><br>
     {% endfor %}
   {% endif %}

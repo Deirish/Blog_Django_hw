@@ -42,12 +42,18 @@ class Post(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    comment = models.ForeignKey(Post, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
     text = models.TextField(max_length=1000, blank=True)
     date_create = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=False)
+    # slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL", null=True)
+
+    # def get_absolute_url(self):
+    #     return reverse('comment', kwargs={'slug': self.slug})
 
     class Meta:
-        ordering = ['text']
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'
 
     def __str__(self):
-        return str(self.text)
+        return '{}'.format(self.author)

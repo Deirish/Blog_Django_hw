@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
-from myapp.models import Post, Topic
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from  myapp.models import Post, Comment
+from myapp.forms import CommentForm
+
 
 
 def main(request):
@@ -51,8 +53,11 @@ def watch_blog(request, post_slug):
     }
     return render(request, 'watch_blog.html', context)
 
-def comment(request, slug=None):
-    return HttpResponse("Comment")
+def comment(request, slug):
+    comments = get_object_or_404(Post, slug=slug)
+    data = Comment.objects.filter(comments=slug)
+    form = CommentForm()
+    return render(request, 'watch_blog.html', {'comments': comments, 'data': data, 'form': form})
 
 
 def create(request):
