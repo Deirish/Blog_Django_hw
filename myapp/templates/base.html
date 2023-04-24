@@ -10,8 +10,9 @@
     {% block header %}
         {% if user.is_authenticated %}
             <a href="{% url 'main' %}">Home </a>
-            <a href="{% url 'logout' %}">Logout </a>
+            <a href="{% url 'blogs' %}">Blogs </a>
             <a href="{% url 'create' %}">Create Post </a>
+            <a href="{% url 'logout' %}">Logout </a>
                 {% if not user.is_superuser %}
                     {{ user }}
                 {% else %}
@@ -26,8 +27,6 @@
 </div>
 <div class="main">
 {% block content %}
-    <h1>{{post.topic}}</h1>
-        {{post.text}}
 {% endblock %}
 </div>
 </body>

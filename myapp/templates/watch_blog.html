@@ -7,14 +7,10 @@
     {% endblock %}
 </div>
 {% block content %}
-    <div class="main_form">
-    <h2>See Blog Details</h2>
-        <h1>{{post.topic}}</h1>
-            {{post.text}}
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Close</button>
-    </form>
-    </div>
+    {% if post.visible %}
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.text }}</p>
+  {% else %}
+    <p>Page Not Found</p>
+  {% endif %}
 {% endblock %}

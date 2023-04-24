@@ -1,6 +1,6 @@
 from django.urls import path, include
 from myapp.views import main, description, watch_blog, comment, create, publication_update, publication_delete, \
-    profile, registration, login, logout, change_data
+    profile, registration, login, logout, change_data, post_list
 
 
 urlpatterns = [
@@ -10,9 +10,9 @@ urlpatterns = [
     path('register/change_password/', change_data, name='change'),
     path('login/', login, name='login'),
     path('logout/', logout, name='logout'),
-    path('blogs/', main, name='blogs'),
+    path('blogs/', post_list, name='blogs'),
     path('about/', description, name='site_description'),
-    path('<slug:slug>/', watch_blog, name='look_blog'),
+    path('<slug:post_slug>/', watch_blog, name='post'),
     path('<slug:slug>/comment/', comment, name='comment'),
     path('blogs/create/', create, name='create'),
     path('<slug:slug>/update/', publication_update, name='publication_update'),

@@ -1,13 +1,26 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
-from myapp.models import Post
+from myapp.models import Post, Topic
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 def main(request):
+    return render(request, 'base.html')
+
+
+def post_list(request):
+    posts = Post.objects.filter(visible='1')
+    paginator = Paginator(posts, 4)
+    page = request.GET.get('page')
+    querysetGoods = paginator.get_page(page)
+
     context = {
-        'posts': Post.objects.all()
+        'posts': posts,
+        'title': "Главная страница блога",
+        'desc': "Описание для главной страницы",
+        'key': "ключевые, слова",
     }
-    return render(request, 'base.html', context)
+    return render(request, 'home.html', context)
 
 
 def registration(request):
@@ -30,11 +43,13 @@ def description(request):
     return HttpResponse("It's description!")
 
 
-def watch_blog(request, slug=None):
-    data = {
-        'text': slug,
+def watch_blog(request, post_slug):
+    post = get_object_or_404(Post, slug=post_slug)
+
+    context = {
+        'post': post
     }
-    return render(request, 'watch_blog.html', data)
+    return render(request, 'watch_blog.html', context)
 
 def comment(request, slug=None):
     return HttpResponse("Comment")

@@ -1,9 +1,13 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 
 class Topic(models.Model):
-    title = models.CharField(max_length=150)
+    id = models.AutoField(unique=True, primary_key=True)
+    title = models.CharField(max_length=150, verbose_name='Topic')
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL", null=True)
 
     def __str__(self):
         return self.title
@@ -13,17 +17,27 @@ class Topic(models.Model):
 
 
 class Post(models.Model):
+    id = models.AutoField(unique=True, primary_key=True)
     author = models.ManyToManyField(User)
-    topic = models.ManyToManyField(Topic)
+    title = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True)
     text = models.TextField()
+    visible = models.BooleanField(default=1)
+    publish = models.DateTimeField(default=timezone.now)
     date_create = models.DateTimeField(auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True)
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL", null=True)
+
+    def get_absolute_url(self):
+        return reverse('post', kwargs={'post_slug': self.slug})
+
+    def __unicode__(self):
+        return self.title
 
     def __str__(self):
-        return self.text
+        return str(self.title)
 
     class Meta:
-        ordering = ['text']
+        ordering = ['title']
 
 
 class Comment(models.Model):
@@ -36,4 +50,4 @@ class Comment(models.Model):
         ordering = ['text']
 
     def __str__(self):
-        return self.text
+        return str(self.text)
