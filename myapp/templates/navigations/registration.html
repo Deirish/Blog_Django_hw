@@ -10,8 +10,9 @@
     <div class="main_form">
     <h2>Registration</h2>
     <form action="" method="post">
+        {{ user_form.as_p }}
         {% csrf_token %}
-        <button type="submit">Sign up</button>
+        <button type="submit">Create account</button>
     </form>
     </div>
 {% endblock %}

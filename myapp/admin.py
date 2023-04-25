@@ -21,16 +21,16 @@ class PostModelAdmin(admin.ModelAdmin):
         model = Post
 
 
-class CommentAdmin(admin.ModelAdmin):
+# class CommentAdmin(admin.ModelAdmin):
 #     list_display = ('author', 'comment', 'date_create', 'active')
 #     list_filter = ('active', 'date_create', 'updated')
 #     search_fields = ('author', 'text')
-    prepopulated_fields = {'slug': ('text',)}
+#     prepopulated_fields = {'slug': ('text',)}
 #
-    class Meta:
-        model = Comment
+    # class Meta:
+    #     model = Comment
 
 
 admin.site.register(Post, PostModelAdmin)
 admin.site.register(Topic, TopicModelAdmin)
-admin.site.register(Comment, CommentAdmin)
+admin.site.register(Comment)
