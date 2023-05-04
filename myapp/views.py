@@ -79,32 +79,28 @@ def watch_blog(request, post_slug):
     return render(request, 'watch_blog.html', context)
 
 
-def comments(request, form=None):
+def comments(request, year, month, day, comment):
+    post = get_object_or_404(Post, slug=comment,
+                             status='published',
+                             publish__year=year,
+                             publish__month=month,
+                             publish__day=day)
+    comments = post.comment.filter(active=True)
+    new_comment = None
     if request.method == 'POST':
-        id = request.POST.get('id', None)
-        if id:
-            try:
-                comment = Post.objects.get(pk=id)
-            except ObjectDoesNotExist:
-                return ()  # обработка ошибки пост не найден
-            if form.is_valid():
-                form = form.save(commit=False)
-                form.user = request.user
-                form.comment = comment
-                form.save()
-                return ()  # все хорошо, коммент сохранен
-            return ()  # обработка ошибки форма не валидная
-        return ()  # обработка ошибки id не передан
-        # else здесь не обязательно писать код выполнится только если не ПОСТ
-    context = {
-        'form': CommentForm(),
-        'comments': Comment.objects.filter(moderation=True)
-    }
-    return (request, 'watch_blog.html', context)
-    # comments = get_object_or_404(Post, id=pk)
-    # data = Comment.objects.filter(comments=pk)
-    # form = CommentForm()
-    # return render(request, 'watch_blog.html', {'comments': comments, 'data': data, 'form': form})
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.post = comment
+            new_comment.save()
+    else:
+        comment_form = CommentForm()
+    return render(request,
+                  'watch_blog.html',
+                  {'post': post,
+                   'comments': comments,
+                   'new_comment': new_comment,
+                   'comment_form': comment_form})
 
 
 def create(request):
