@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from myapp.models import Comment
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
+from django.contrib.auth import authenticate
 
 
 class UserCreateForm(UserCreationForm):
@@ -15,11 +16,16 @@ class UserCreateForm(UserCreationForm):
         model = User
         fields = ('username', 'email', 'password1', 'password2')
 
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if User.objects.filter(email=email).exists():
-            raise ValidationError('Email is already registered')
-        return email
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username')
+        password2 = cleaned_data.get('password2')
+        email = cleaned_data.get('email')
+        if username and password2:
+            self.user = authenticate(username=username, password2=password2, email=email)
+            if self.user is None:
+                raise forms.ValidationError('OOPS!!!')
+
 
 class CommentForm(forms.Form):
     # text = forms.CharField(max_length=500)

@@ -1,8 +1,8 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from myapp.models import Post, Comment
 from myapp.forms import CommentForm, UserCreateForm
 
@@ -31,35 +31,60 @@ def registration(request):
         user_form = UserCreateForm(request.POST)
         if user_form.is_valid():
             new_user = user_form.save(commit=False)
-            new_user.set_password(user_form.cleaned_data['password'])
+            new_user.set_password(user_form.cleaned_data['password2'])
             new_user.save()
             return render(request, 'navigations/registration_done.html', {'new_user': new_user})
     else:
         user_form = UserCreateForm()
-        return render(request, 'navigations/registration.html', {'user_form': user_form})
+    return render(request, 'navigations/registration.html', {'user_form': user_form})
 
 
 def login(request):
+    if request.user.is_authenticated:
+        return redirect('main')
     if request.method == 'POST':
         form = UserCreateForm(request.POST)
         if form.is_valid():
-            cd = form.cleaned_data
-            user = authenticate(username=cd['username'], password=cd['password'])
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return HttpResponse('Authenticated successfully')
-                else:
-                    return HttpResponse('Disabled account')
-            else:
-                return HttpResponse('Invalid login')
+            user = authenticate(
+                username=form.cleaned_data['username'],
+                password=form.cleaned_data['password1'],
+            )
+            login(request, form.user)
+            return HttpResponseRedirect('main')
+            # if user is not None:
+            #     login(request, form.user)
+            #     return redirect('main')
+
     else:
         form = UserCreateForm()
-    return render(request, 'navigations/login.html', {'form': form})
+
+    return render(
+        request=request,
+        template_name='navigations/login.html',
+        context={'form': form}
+    )
+
+    # if request.method == 'POST':
+    #     form = UserCreateForm(request.POST)
+    #     if form.is_valid():
+    #         cd = form.cleaned_data
+    #         user = authenticate(username=cd['username'], password1=cd['password1'], email=cd['email'])
+    #         if user is not None:
+    #             if user.is_active:
+    #                 login(request, form.user)
+    #                 return HttpResponseRedirect('Authenticated successfully')
+    #             else:
+    #                 return HttpResponseRedirect('Disabled account')
+    #         else:
+    #             return HttpResponseRedirect('Invalid login')
+    # else:
+    #     form = UserCreateForm()
+    # return render(request, 'navigations/login.html', {'form': form})
 
 
-def logout(request):
-    return HttpResponse("Logout page")
+def logout_view(request):
+    logout(request)
+    return redirect('login')
 
 
 def change_data(request):
