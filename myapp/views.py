@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import get_user_model, authenticate, login, logout
 from myapp.models import Post, Comment
 from myapp.forms import CommentForm, UserCreateForm
+
 
 
 def main(request):
@@ -28,58 +31,19 @@ def post_list(request):
 
 def registration(request):
     if request.method == 'POST':
-        user_form = UserCreateForm(request.POST)
-        if user_form.is_valid():
-            new_user = user_form.save(commit=False)
-            new_user.set_password(user_form.cleaned_data['password2'])
-            new_user.save()
-            return render(request, 'navigations/registration_done.html', {'new_user': new_user})
-    else:
-        user_form = UserCreateForm()
-    return render(request, 'navigations/registration.html', {'user_form': user_form})
-
-
-def login(request):
-    if request.user.is_authenticated:
-        return redirect('main')
-    if request.method == 'POST':
         form = UserCreateForm(request.POST)
         if form.is_valid():
-            user = authenticate(
-                username=form.cleaned_data['username'],
-                password=form.cleaned_data['password1'],
-            )
-            login(request, form.user)
-            return HttpResponseRedirect('main')
-            # if user is not None:
-            #     login(request, form.user)
-            #     return redirect('main')
-
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Ваш аккаунт создан: можно войти на сайт.')
+            return redirect('login')
     else:
         form = UserCreateForm()
+    return render(request, 'navigations/registration.html', {'form': form})
 
-    return render(
-        request=request,
-        template_name='navigations/login.html',
-        context={'form': form}
-    )
-
-    # if request.method == 'POST':
-    #     form = UserCreateForm(request.POST)
-    #     if form.is_valid():
-    #         cd = form.cleaned_data
-    #         user = authenticate(username=cd['username'], password1=cd['password1'], email=cd['email'])
-    #         if user is not None:
-    #             if user.is_active:
-    #                 login(request, form.user)
-    #                 return HttpResponseRedirect('Authenticated successfully')
-    #             else:
-    #                 return HttpResponseRedirect('Disabled account')
-    #         else:
-    #             return HttpResponseRedirect('Invalid login')
-    # else:
-    #     form = UserCreateForm()
-    # return render(request, 'navigations/login.html', {'form': form})
+@login_required
+def profile(request):
+    return render(request, 'navigations/registration_done.html')
 
 
 def logout_view(request):
@@ -129,6 +93,10 @@ def comments(request, year, month, day, comment):
 
 
 def create(request):
+    # if request.method == 'GET':
+    #     return render(request, 'create_blog.html')
+    # else:
+
     return render(request, 'create_blog.html')
 
 
@@ -139,6 +107,3 @@ def publication_update(request, slug=None):
 def publication_delete(request, slug=None):
     return HttpResponse("Delete publication")
 
-
-def profile(request, username=None):
-    return HttpResponse("This is the user's personal page")
