@@ -11,7 +11,10 @@
     <h2>Create Blog</h2>
     <form action="" method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Новая статья</legend>
+            {{ form.as_p }}
+        </fieldset>
         <button type="submit">Send</button>
     </form>
     </div>
