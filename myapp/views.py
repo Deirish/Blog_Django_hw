@@ -42,7 +42,7 @@ def registration(request):
     return render(request, 'navigations/registration.html', {'form': form})
 
 @login_required
-def profile(request):
+def profile(request, user):
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, instance=request.user)
         profile_form = ProfileUpdateForm(request.POST, instance=request.user.profile)

@@ -12,7 +12,7 @@
             <a href="{% url 'main' %}">Home </a>
             <a href="{% url 'blogs' %}">Blogs </a>
             <a href="{% url 'create' %}">Create Post </a>
-            <a href="{% url 'profile' %}">Profile </a>
+            <a href="{% url 'profile' user.username %}">Profile </a>
             <a href="{% url 'logout' %}">Logout </a>
                 {% if not user.is_superuser %}
                     {{ user }}

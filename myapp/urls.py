@@ -18,7 +18,7 @@ urlpatterns = [
     path('blogs/create/', create, name='create'),
     path('<slug:slug>/update/', publication_update, name='publication_update'),
     path('<slug:slug>/delete/', publication_delete, name='publication_delete'),
-    path('profile/<str:username>/', profile, name='profile'),
+    path('profile//<str:username>', profile, name='profile'),
 
 
 

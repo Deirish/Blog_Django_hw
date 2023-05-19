@@ -26,7 +26,8 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = PersonalPage
-        fields = ['user']
+        fields = ['username']
+
 
 class CommentForm(forms.Form):
     # text = forms.CharField(max_length=500)
