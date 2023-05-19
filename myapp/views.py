@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -5,8 +6,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import get_user_model, authenticate, login, logout
-from myapp.models import Post, Comment
-from myapp.forms import CommentForm, UserCreateForm, UserUpdateForm, ProfileUpdateForm
+from myapp.models import Post, Topic, Comment
+from myapp.forms import CommentForm, UserCreateForm
 
 
 
@@ -42,27 +43,27 @@ def registration(request):
     return render(request, 'navigations/registration.html', {'form': form})
 
 @login_required
-def profile(request, user):
-    if request.method == 'POST':
-        user_form = UserUpdateForm(request.POST, instance=request.user)
-        profile_form = ProfileUpdateForm(request.POST, instance=request.user.profile)
+def profile(request, username):
+    # if request.method == 'POST':
+    #     user_form = UserUpdateForm(request.POST, instance=request.user)
+    #     profile_form = ProfileUpdateForm(request.POST, instance=request.user.profile)
+    #
+    #     if user_form.is_valid() and profile_form.is_valid():
+    #         user_form.save()
+    #         profile_form.save()
+    #         messages.success(request, f'Профиль успешно обновлен.')
+    #         return redirect('profile')
+    #
+    # else:
+    #     user_form = UserUpdateForm(instance=request.user)
+    #     profile_form = ProfileUpdateForm(instance=request.user.profile)
+    #
+    # context = {
+    #     'user_form': user_form,
+    #     'profile_form': profile_form
+    # }
 
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            messages.success(request, f'Профиль успешно обновлен.')
-            return redirect('profile')
-
-    else:
-        user_form = UserUpdateForm(instance=request.user)
-        profile_form = ProfileUpdateForm(instance=request.user.profile)
-
-    context = {
-        'user_form': user_form,
-        'profile_form': profile_form
-    }
-
-    return render(request, 'navigations/registration_done.html', context)
+    return render(request, 'navigations/registration_done.html')
 
 
 def logout_view(request):
@@ -111,12 +112,19 @@ def comments(request, year, month, day, comment):
                    'comment_form': comment_form})
 
 
+@login_required(login_url='/login/')
 def create(request):
-    # if request.method == 'GET':
-    #     return render(request, 'create_blog.html')
-    # else:
+    if request.method == 'POST':
+        post = Post(author=User.objects.get(username=request.user),
+                    title=request.POST.get('title'),
+                    text=request.POST.get('text'))
+        topic = request.POST.getlist('topic')
+        post.save()
+        for obj in topic:
+            post.contains.add(Topic.objects.get(title=obj))
 
-    return render(request, 'create_blog.html')
+    list_topic = Topic.objects.all()
+    return render(request, 'create_blog.html', {'list_topic': list_topic})
 
 
 def publication_update(request, slug=None):

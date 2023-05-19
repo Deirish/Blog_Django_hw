@@ -15,18 +15,18 @@ class UserCreateForm(UserCreationForm):
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
 
 
-class UserUpdateForm(forms.ModelForm):
-    email = forms.EmailField()
-
-    class Meta:
-        model = User
-        fields = ['username', 'email']
-
-
-class ProfileUpdateForm(forms.ModelForm):
-    class Meta:
-        model = PersonalPage
-        fields = ['username']
+# class UserUpdateForm(forms.ModelForm):
+#     email = forms.EmailField()
+#
+#     class Meta:
+#         model = User
+#         fields = '__all__'
+#
+#
+# class ProfileUpdateForm(forms.ModelForm):
+#     class Meta:
+#         model = PersonalPage
+#         fields = '__all__'
 
 
 class CommentForm(forms.Form):

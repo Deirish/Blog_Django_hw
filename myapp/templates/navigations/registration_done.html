@@ -3,7 +3,12 @@
 {% block title %}Welcome{% endblock %}
 
 {% load static %}
-
+<div class="header">
+    {% block header %}
+    <a href="{% url 'main' %}">Home </a>
+    <a href="{% url 'site_description' %}">About </a>
+    {% endblock %}
+</div>
 {% block content %}
     <div class="content-section">
     <div class="media-body">
@@ -14,8 +19,8 @@
           {% csrf_token %}
           <fieldset class="form-group">
               <legend class="border-bottom mb-4">Ваш профиль</legend>
-              {{ user_form|crispy }}
-              {{ profile_form|crispy }}
+              {{ user_form.as_p }}
+              {{ profile_form.as_p }}
           </fieldset>
           <div class="form-group">
               <button class="btn btn-outline-info" type="submit">Обновить</button>
